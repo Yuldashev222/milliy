@@ -40,7 +40,6 @@ def addAdjective(request):
     form = AdjectiveForm(request.POST)
     if form.is_valid():
         obj = form.save(commit=False)
-        print("{{{{{{{{{{{{{{{{{{{{}}}}}}}}}}}}}}}}}}}}}}}}")
         if request.POST["new_synonym"] and request.POST["new_synonym"] not in list(
                 map(lambda dict: dict["word"], Synonym.objects.all().values("word"))):
             new_synonym = Synonym.objects.create(word=request.POST["new_synonym"])
@@ -59,12 +58,38 @@ def deleteAdjective(request, id):
 
 
 def editAdjective(request, id):
-    obj = list(InfoAdjective.objects.filter(id=id).values())[0]
-    obj["synonyms"] = InfoAdjective.objects.get(id=obj["id"]).get_synonyms()
-    obj["antonyms"] = InfoAdjective.objects.get(id=obj["id"]).get_antonyms()
-    obj["hyponyms"] = InfoAdjective.objects.get(id=obj["id"]).get_hyponyms()
-    obj["hyperonyms"] = InfoAdjective.objects.get(id=obj["id"]).get_hyperonyms()
-    return JsonResponse({"obj": obj})
+    obj = InfoAdjective.objects.filter(id=id)
+    obj_synonyms = InfoAdjective.objects.get(id=obj[0].id).get_synonyms()
+    obj_antonyms = InfoAdjective.objects.get(id=obj[0].id).get_antonyms()
+    obj_hyponyms = InfoAdjective.objects.get(id=obj[0].id).get_hyponyms()
+    obj_hyperonyms = InfoAdjective.objects.get(id=obj[0].id).get_hyperonyms()
+    obj = list(obj.values())
+
+
+    synonyms = list(Synonym.objects.all().order_by("-id").values())
+    antonyms = list(Antonym.objects.all().order_by("-id").values())
+    hyponyms = list(Hyponym.objects.all().order_by("-id").values())
+    hyperonyms = list(Hyperonym.objects.all().order_by("-id").values())
+
+    adjectives_types_two = list(map(list, InfoAdjective.ADJECTIVES_TYPES_TWO))
+    adjective_types = list(map(list, InfoAdjective.ADJECTIVE_TYPES))
+    adjective_levels = list(map(list, InfoAdjective.ADJECTIVE_LEVELS))
+    adjective_type_structure = list(map(list, InfoAdjective.ADJECTIVE_TYPE_STRUCTURE))
+    return JsonResponse({
+        "obj": obj,
+        "synonyms": synonyms,
+        "antonyms": antonyms,
+        "hyponyms": hyponyms,
+        "hyperonyms": hyperonyms,
+        "obj_synonyms": obj_synonyms,
+        "obj_antonyms": obj_antonyms,
+        "obj_hyponyms": obj_hyponyms,
+        "obj_hyperonyms": obj_hyperonyms,
+        "adjectives_types_two": adjectives_types_two,
+        "adjective_types": adjective_types,
+        "adjective_levels": adjective_levels,
+        "adjective_type_structure": adjective_type_structure,
+    })
 
 
 def add_objs(request):

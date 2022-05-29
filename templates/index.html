@@ -12,9 +12,58 @@
     <link rel="stylesheet" href="{% static 'main.css' %}">
     <title>Document</title>
     <style>
+        .border-color {
+            border-color: red;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .addForm {
+            display: none;
+        }
+
+        .block-none {
+            display: block;
+        }
+
+        .objs {
+            display: flex;
+            width: 100%;
+        }
+
+        .objs div {
+            margin: 0;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            text-align: left;
+            width: 150px;
+        }
+
+        .objs-input {
+            width: 100%;
+        }
+
+        .new-btn {
+            margin: 5px 0 !important;
+            background-color: #337ab7;
+            color: #fff;
+        }
+
+        .tbl-content {
+            height: auto;
+            max-height: 550px;
+        }
+
         .add_form > div {
             margin-bottom: 20px;
         }
+
         p {
             margin: 0;
             padding: 0;
@@ -191,7 +240,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="scrollmodalLabel">Yangi so'z qoshish</h5>
+                <h5 class="modal-title title" id="scrollmodalLabel" style="margin: 0">Yangi so'z qoshish</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -199,98 +248,100 @@
             <div class="modal-body">
                 <form class="add_form" action="{% url 'add-adjective' %}" method="post">{% csrf_token %}
                     <div>
-                        <span>So'z: </span>
+                        <span class="title">So'z: </span>
                         <p><input type="text" name="word"></p>
                     </div>
                     <div>
-                        <span>Belgi ifodalashiga ko‘ra turi: </span>
+                        <span class="title">Belgi ifodalashiga ko‘ra turi: </span>
                         <p>{{ form.adjectives_two }}</p>
                     </div>
                     <div>
-                        <span>Sifat turi: </span>
+                        <span class="title">Sifat turi: </span>
                         <p>{{ form.adjective_type }}</p>
                     </div>
                     <div>
-                        <span>Sifat darajasi: </span>
+                        <span class="title">Sifat darajasi: </span>
                         <p>{{ form.adjective_level }}</p>
                     </div>
                     <div>
-                        <span>Tuzilish jihatdan turi: </span>
+                        <span class="title">Tuzilish jihatdan turi: </span>
                         <p>{{ form.adjective_type_structure }}</p>
                     </div>
-                    <div>
-                        <p>Sinonimlari: </p>
-                        <ul class="manytomany" id="synonymsList">
-                            {% for word in synonyms %}
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="synonym" value="{{ word.id }}">
-                                        {{ word }}
-                                    </label>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <button type="button" id="newSynonymBtn">+</button>
-                        <p class="addForm" id="addForm" style="display: none">
-                            <input type="text" name="new_synonym" id="newInput">
-                            <button type="button" id="addBtn">qo'shish</button>
-                        </p>
+                    <div class="objs" style="display: flex;">
+                        <div>
+                            <p class="title">Sinonimlari: </p>
+                            <ul class="manytomany" id="synonymsList">
+                                {% for word in synonyms %}
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="synonym" value="{{ word.id }}">
+                                            {{ word }}
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button class="new-btn" type="button" id="newSynonymBtn">yangi qo'shish</button>
+                            <p class="addForm" id="addForm">
+                                <input class="objs-input" type="text" name="new_synonym" id="newInput">
+                                <button class="new-btn" type="button" id="addBtn">qo'shish</button>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="title">Antonimlari: </p>
+                            <ul class="manytomany" id="antonymList">
+                                {% for word in antonyms %}
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="antonym" value="{{ word.id }}">
+                                            {{ word }}
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button class="new-btn" type="button" id="newAntonymBtn">yangi qo'shish</button>
+                            <p class="addForm" id="addAntonymForm">
+                                <input class="objs-input" type="text" name="new_antonym" id="newAntonymInput">
+                                <button class="new-btn" type="button" id="addAntonymBtn">qo'shish</button>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="title">Giponimlari: </p>
+                            <ul class="manytomany" id="hyponymList">
+                                {% for word in hyponyms %}
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="hyponym" value="{{ word.id }}">
+                                            {{ word }}
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button class="new-btn" type="button" id="newHyponymBtn">yangi qo'shish</button>
+                            <p class="addForm" id="addHyponymForm">
+                                <input class="objs-input" type="text" name="new_hyponym" id="newHyponymInput">
+                                <button class="new-btn" type="button" id="addHyponymBtn">qo'shish</button>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="title">Giperonimlari: </p>
+                            <ul class="manytomany" id="hyperonymList">
+                                {% for word in hyperonyms %}
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" name="hyperonym" value="{{ word.id }}">
+                                            {{ word }}
+                                        </label>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <button class="new-btn" type="button" id="newHyperonymBtn">yangi qo'shish</button>
+                            <p class="addForm" id="addHyperonymForm">
+                                <input class="objs-input" type="text" name="new_hyperonym" id="newHyperonymInput">
+                                <button class="new-btn" type="button" id="addHyperonymBtn">qo'shish</button>
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p>Antonimlari: </p>
-                        <ul class="manytomany" id="antonymList">
-                            {% for word in antonyms %}
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="antonym" value="{{ word.id }}">
-                                        {{ word }}
-                                    </label>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <button type="button" id="newAntonymBtn">+</button>
-                        <p class="addForm" id="addAntonymForm" style="display: none">
-                            <input type="text" name="new_antonym" id="newAntonymInput">
-                            <button type="button" id="addAntonymBtn">qo'shish</button>
-                        </p>
-                    </div>
-                    <div>
-                        <p>Giponimlari: </p>
-                        <ul class="manytomany" id="hyponymList">
-                            {% for word in hyponyms %}
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="hyponym" value="{{ word.id }}">
-                                        {{ word }}
-                                    </label>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <button type="button" id="newHyponymBtn">+</button>
-                        <p class="addForm" id="addHyponymForm" style="display: none">
-                            <input type="text" name="new_hyponym" id="newHyponymInput">
-                            <button type="button" id="addHyponymBtn">qo'shish</button>
-                        </p>
-                    </div>
-                    <div>
-                        <p>Giperonimlari: </p>
-                        <ul class="manytomany" id="hyperonymList">
-                            {% for word in hyperonyms %}
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="hyperonym" value="{{ word.id }}">
-                                        {{ word }}
-                                    </label>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <button type="button" id="newHyperonymBtn">+</button>
-                        <p class="addForm" id="addHyperonymForm" style="display: none">
-                            <input type="text" name="new_hyperonym" id="newHyperonymInput">
-                            <button type="button" id="addHyperonymBtn">qo'shish</button>
-                        </p>
-                    </div>
-                    <p>Izoh:</p>
+                    <p class="title">Izoh:</p>
                     <textarea name="review"></textarea>
 
                     <div class="modal-footer">
@@ -428,25 +479,320 @@
                 "id": id
             },
             success: function (data) {
-                var obj = data.obj;
+                var obj = data.obj[0];
                 const header = document.getElementById("staticModalLabel");
                 const content = document.getElementById("contentSingle");
-                header.innerHTML = `${data.obj.word} So'zi`;
+                header.innerHTML = `${obj.word} So'zi`;
                 content.innerHTML = "";
-
                 content.innerHTML += `<form method="post">{% csrf_token %}
-                <p><span>So'z: </span><input type="text" name="word" value="${obj.word}"></p>
-                <select name="adjectives_two">
-                    {% for option in form.adjectives_two %}
-                        {{ option }}
-                    {% endfor %}
-                </select>
-                <p><span>Sifat turi: </span><input type="text" name="adjective_type" value="${obj.adjective_type}"></p>
-                <p><span>Sifat darajasi: </span><input type="text" name="adjective_level" value="${obj.adjective_level}"></p>
-                <p><span>Tuzilish jihatdan turi: </span><input type="text" name="adjective_type_structure" value="${obj.adjective_type_structure}"></p>
-                <button type="submit">Yangilash</button>
-                </form>`
+                <span>So'z: </span>
+                <p><input type="text" name="word" value="${obj.word}"></p>`;
+                var wr = "<select name='adjectives_two'>";
+                (data.adjectives_types_two).forEach(word => {
+                    if (word[0] == obj.adjectives_two) {
+                        wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
+                    } else {
+                        wr += `<option value="${word[0]}">${word[1]}</option>`;
+                    }
+                });
+                wr += "</select>";
+                content.innerHTML += wr;
+
+                wr = "<select name='adjective_type'>";
+                (data.adjective_types).forEach(word => {
+                    if (word[0] == obj.adjective_type) {
+                        wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
+                    } else {
+                        wr += `<option value="${word[0]}">${word[1]}</option>`;
+                    }
+                });
+                wr += "</select>";
+                content.innerHTML += wr;
+
+                wr = "<select name='adjective_level'>";
+                (data.adjective_levels).forEach(word => {
+                    if (word[0] == obj.adjective_level) {
+                        wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
+                    } else {
+                        wr += `<option value="${word[0]}">${word[1]}</option>`;
+                    }
+                });
+                wr += "</select>";
+                content.innerHTML += wr;
+
+                wr = "<select name='adjective_level'>";
+                (data.adjective_type_structure).forEach(word => {
+                    if (word[0] == obj.adjective_type_structure) {
+                        wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
+                    } else {
+                        wr += `<option value="${word[0]}">${word[1]}</option>`;
+                    }
+                });
+                wr += "</select>";
+                content.innerHTML += wr;
+
+                // synonyms
+                content.innerHTML += `<div><p class="title">Sinonimlari: </p>`;
+
+                wr = '<ul class="manytomany synonymList">';
+                (data.synonyms).forEach(obj => {
+                    if (data.obj_synonyms.includes(obj.word)) {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" checked name="synonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    } else {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="synonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    }
+                });
+
+                wr += "</ul>";
+
+                content.innerHTML += wr;
+
+                content.innerHTML += `
+                        <button class="new-btn newSynonymBtn" type="button">yangi qo'shish</button>
+                        <p class="addForm addSynonymForm">
+                            <input class="objs-input newSynonymInput" type="text" name="new_synonym">
+                            <button class="new-btn addSynonymBtn" type="button">qo'shish</button>
+                        </p>
+                    </div>`;
+
+                // Antonyms
+                content.innerHTML += `<div><p class="title">Antonimlari: </p>`;
+
+                wr = '<ul class="manytomany antonymList">';
+                (data.antonyms).forEach(obj => {
+                    if (data.obj_antonyms.includes(obj.word)) {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" checked name="antonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    } else {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="antonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    }
+                });
+
+                wr += "</ul>";
+
+                content.innerHTML += wr;
+
+                content.innerHTML += `
+                        <button class="new-btn newAntonymBtn" type="button">yangi qo'shish</button>
+                        <p class="addForm addAntonymForm">
+                            <input class="objs-input newAntonymInput" type="text" name="new_antonym">
+                            <button class="new-btn addAntonymBtn" type="button">qo'shish</button>
+                        </p>
+                    </div>`;
+
+                // Giperonyms
+                content.innerHTML += `<div><p class="title">Giperonimlari: </p>`;
+
+                wr = '<ul class="manytomany hyperonymList">';
+                (data.hyperonyms).forEach(obj => {
+                    if (data.obj_hyperonyms.includes(obj.word)) {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" checked name="hyperonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    } else {
+                        wr += `
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="hyperonym" value="${obj.id}">
+                                    ${obj.word}
+                                </label>
+                            </li>`
+                    }
+                });
+
+                wr += "</ul>";
+
+                content.innerHTML += wr;
+
+                content.innerHTML += `
+                        <button class="new-btn newHyperonymBtn" type="button">yangi qo'shish</button>
+                        <p class="addForm addHyperonymForm">
+                            <input class="objs-input newHyperonymInput" type="text" name="new_hyperonym">
+                            <button class="new-btn addHyperonymBtn" type="button">qo'shish</button>
+                        </p>
+                    </div>`;
+
+
+                content.innerHTML += `
+                    <p><textarea name="review">${obj.review}</textarea></p>
+                    <button type="submit">Yangilash</button>
+                    </form>`;
+
+                const singleNewHyperonymBtn = document.querySelector(".newHyperonymBtn");
+                const singleNewHyperonymInput = document.querySelector(".newHyperonymInput");
+                const singleAddHyperonymForm = document.querySelector(".addHyperonymForm");
+                const singleAddHyperonymBtn = document.querySelector(".addHyperonymBtn");
+
+                singleNewHyperonymBtn.addEventListener("click", function () {
+                    singleAddHyperonymForm.classList.toggle("block-none");
+                });
+
+                const obj_hyperonyms = data.obj_hyperonyms;
+
+                singleAddHyperonymBtn.addEventListener("click", function () {
+                    $.ajax({
+                        url: "{% url 'add-objs' %}",
+                        data: {"word": singleNewHyperonymInput.value, "check": "Hyperonym"},
+                        type: "GET",
+                        success: function (data) {
+                            singleNewHyperonymInput.classList.remove("border-color");
+                            const hyperonymList = document.querySelector(".hyperonymList");
+                            hyperonymList.innerHTML = "";
+                            singleNewHyperonymInput.value = "";
+
+                            (data.objs).forEach(hyperonym => {
+                                if (obj_hyperonyms.includes(hyperonym.word)) {
+                                    hyperonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" checked name="hyperonym" value="${hyperonym.id}">
+                                                ${hyperonym.word}
+                                            </label>
+                                        </li>`
+                                } else {
+                                    hyperonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" name="hyperonym" value="${hyperonym.id}">
+                                                ${hyperonym.word}
+                                            </label>
+                                        </li>`
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            singleNewHyperonymInput.classList.add("border-color");
+                        }
+                    });
+                });
+
+
+                const singleNewSynonymBtn = document.querySelector(".newSynonymBtn");
+                const singleNewSynonymInput = document.querySelector(".newSynonymInput");
+                const singleAddSynonymForm = document.querySelector(".addSynonymForm");
+                const singleAddSynonymBtn = document.querySelector(".addSynonymBtn");
+
+                singleNewSynonymBtn.addEventListener("click", function () {
+                    singleAddSynonymForm.classList.toggle("block-none");
+                });
+
+                const obj_synonyms = data.obj_synonyms;
+
+                singleAddSynonymBtn.addEventListener("click", function () {
+                    $.ajax({
+                        url: "{% url 'add-objs' %}",
+                        data: {"word": singleNewSynonymInput.value, "check": "Synonym"},
+                        type: "GET",
+                        success: function (data) {
+                            singleNewSynonymInput.classList.remove("border-color");
+                            const synonymList = document.querySelector(".synonymList");
+                            synonymList.innerHTML = "";
+                            singleNewSynonymInput.value = "";
+
+                            (data.objs).forEach(synonym => {
+                                if (obj_synonyms.includes(synonym.word)) {
+                                    synonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" checked name="synonym" value="${synonym.id}">
+                                                ${synonym.word}
+                                            </label>
+                                        </li>`
+                                } else {
+                                    synonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" name="synonym" value="${synonym.id}">
+                                                ${synonym.word}
+                                            </label>
+                                        </li>`
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            singleNewSynonymInput.classList.add("border-color");
+                        }
+                    });
+                });
+
+                const singleNewAntonymBtn = document.querySelector(".newAntonymBtn");
+                const singleNewAntonymInput = document.querySelector(".newAntonymInput");
+                const singleAddAntonymForm = document.querySelector(".addAntonymForm");
+                const singleAddAntonymBtn = document.querySelector(".addAntonymBtn");
+
+                singleNewAntonymBtn.addEventListener("click", function () {
+                    singleAddAntonymForm.classList.toggle("block-none");
+                });
+
+                const obj_antonyms = data.obj_antonyms;
+
+                singleAddAntonymBtn.addEventListener("click", function () {
+                    $.ajax({
+                        url: "{% url 'add-objs' %}",
+                        data: {"word": singleNewAntonymInput.value, "check": "Synonym"},
+                        type: "GET",
+                        success: function (data) {
+                            singleNewAntonymInput.classList.remove("border-color");
+                            const antonymList = document.querySelector(".antonymList");
+                            antonymList.innerHTML = "";
+                            singleNewAntonymInput.value = "";
+
+                            (data.objs).forEach(antonym => {
+                                if (obj_antonyms.includes(antonym.word)) {
+                                    antonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" checked name="antonym" value="${antonym.id}">
+                                                ${antonym.word}
+                                            </label>
+                                        </li>`
+                                } else {
+                                    antonymList.innerHTML += `
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" name="antonym" value="${antonym.id}">
+                                                ${antonym.word}
+                                            </label>
+                                        </li>`
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            singleNewAntonymInput.classList.add("border-color");
+                        }
+                    });
+                });
+
+
             }
+
         });
     }
 
@@ -456,7 +802,7 @@
     const addBtn = document.getElementById("addBtn");
 
     newSynonymBtn.addEventListener("click", function () {
-        $("#addForm").css("display", "block");
+        addForm.classList.toggle("block-none");
     });
 
     addBtn.addEventListener("click", function () {
@@ -492,7 +838,7 @@
     const addAntonymBtn = document.getElementById("addAntonymBtn");
 
     newAntonymBtn.addEventListener("click", function () {
-        $("#addAntonymForm").css("display", "block");
+        addAntonymForm.classList.toggle("block-none");
     });
 
     addAntonymBtn.addEventListener("click", function () {
@@ -530,7 +876,7 @@
     const addHyponymBtn = document.getElementById("addHyponymBtn");
 
     newHyponymBtn.addEventListener("click", function () {
-        $("#addHyponymForm").css("display", "block");
+        addHyponymForm.classList.toggle("block-none");
     });
 
     addHyponymBtn.addEventListener("click", function () {
@@ -567,7 +913,7 @@
     const addHyperonymBtn = document.getElementById("addHyperonymBtn");
 
     newHyperonymBtn.addEventListener("click", function () {
-        $("#addHyperonymForm").css("display", "block");
+        addHyperonymForm.classList.toggle("block-none");
     });
 
     addHyperonymBtn.addEventListener("click", function () {
@@ -596,6 +942,8 @@
             }
         });
     });
+
+
 </script>
 
 </body>

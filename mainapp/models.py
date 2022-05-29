@@ -67,9 +67,9 @@ class InfoAdjective(models.Model):
                                                 default=ADJECTIVE_TYPE_STRUCTURE[0][0])
     review = models.CharField(verbose_name="Izoh", max_length=1000, blank=True)
     synonym = models.ManyToManyField(Synonym, verbose_name="Sinonim", related_name="synonyms", blank=True)
-    antonym = models.ManyToManyField(Antonym, verbose_name="Antonim", related_name="antonyms", blank=True)
-    hyponym = models.ManyToManyField(Hyponym, verbose_name="Giponim", related_name="hyponyms", blank=True)
-    hyperonym = models.ManyToManyField(Hyperonym, verbose_name="Giperonim", related_name="hyperonyms", blank=True)
+    antonym = models.ManyToManyField(Antonym, verbose_name="Antonim", blank=True)
+    hyponym = models.ManyToManyField(Hyponym, verbose_name="Giponim", blank=True)
+    hyperonym = models.ManyToManyField(Hyperonym, verbose_name="Giperonim", blank=True)
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
 
