@@ -1,49 +1,47 @@
 import json
-import openpyxl
+
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from .models import *
-from .forms import AdjectiveForm, NounForm
+from .forms import NounForm
 
 
 def home(request):
-    form = AdjectiveForm()
+    form = NounForm()
     synonyms = Synonym.objects.all()
     antonyms = Antonym.objects.all()
     hyponyms = Hyponym.objects.all()
     hyperonyms = Hyperonym.objects.all()
-    infoAdjective = InfoAdjective.objects.all().order_by("-created_date")
+    infoNoun = InfoNoun.objects.all().order_by("-created_date")
     if request.GET:
         word = request.GET["word"]
-        infoAdjective = list(InfoAdjective.objects.filter(Q(word__icontains=word)).order_by("-created_date").values())
-        for adjective in infoAdjective:
-            adjective["synonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_synonyms()
-            adjective["antonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_antonyms()
-            adjective["hyponyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_hyponyms()
-            adjective["hyperonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_hyperonyms()
+        infoNoun = list(InfoNoun.objects.filter(Q(word__icontains=word)).order_by("-created_date").values())
+        for noun in infoNoun:
+            noun["synonyms"] = InfoNoun.objects.get(id=noun["id"]).get_synonyms()
+            noun["antonyms"] = InfoNoun.objects.get(id=noun["id"]).get_antonyms()
+            noun["hyponyms"] = InfoNoun.objects.get(id=noun["id"]).get_hyponyms()
+            noun["hyperonyms"] = InfoNoun.objects.get(id=noun["id"]).get_hyperonyms()
 
-        return JsonResponse({"adjectives": infoAdjective})
+        return JsonResponse({"nouns": infoNoun})
 
     if request.POST:
         word = request.POST["word"]
-        adjectives_two = request.POST["adjectives_two"]
-        adjective_type = request.POST["adjective_type"]
-        adjective_level = request.POST["adjective_level"]
-        adjective_type_structure = request.POST["adjective_type_structure"]
+        noun_types = request.POST["noun_types"]
+        noun_types_structure = request.POST["noun_types_structure"]
+        noun_making = request.POST["noun_making"]
         review = request.POST["review"]
         synonym = request.POST.getlist("synonym")
         antonym = request.POST.getlist("antonym")
         hyponym = request.POST.getlist("hyponym")
         hyperonym = request.POST.getlist("hyperonym")
 
-        obj = InfoAdjective.objects.get(id=request.POST["id"])
+        obj = InfoNoun.objects.get(id=request.POST["id"])
         obj.word = word
-        obj.adjectives_two = adjectives_two
-        obj.adjective_type = adjective_type
-        obj.adjective_level = adjective_level
-        obj.adjective_type_structure = adjective_type_structure
+        obj.noun_types = noun_types
+        obj.noun_types_structure = noun_types_structure
+        obj.noun_making = noun_making
         obj.review = review
         obj.synonym.set(synonym)
         obj.antonym.set(antonym)
@@ -51,21 +49,20 @@ def home(request):
         obj.hyperonym.set(hyperonym)
         obj.save()
 
-        return redirect("home")
+        return redirect("nouns")
     ctx = {
-        "adjectives": infoAdjective,
+        "nouns": infoNoun,
         "form": form,
         "synonyms": synonyms,
         "antonyms": antonyms,
         "hyponyms": hyponyms,
         "hyperonyms": hyperonyms,
     }
-    return render(request, "index.html", ctx)
+    return render(request, "second.html", ctx)
 
 
-
-def addAdjective(request):
-    form = AdjectiveForm(request.POST)
+def addNoun(request):
+    form = NounForm(request.POST)
     if form.is_valid():
         obj = form.save(commit=False)
         if request.POST["new_synonym"] and request.POST["new_synonym"] not in list(
@@ -87,22 +84,22 @@ def addAdjective(request):
         obj.save()
         form.save_m2m()
 
-    return redirect("home")
+    return redirect("nouns")
 
 
-def deleteAdjective(request, id):
-    obj = InfoAdjective.objects.get(id=id)
+def deleteNoun(request, id):
+    obj = InfoNoun.objects.get(id=id)
     obj.delete()
 
-    return redirect("home")
+    return redirect("nouns")
 
 
-def editAdjective(request, id):
-    obj = InfoAdjective.objects.filter(id=id)
-    obj_synonyms = InfoAdjective.objects.get(id=obj[0].id).get_synonyms()
-    obj_antonyms = InfoAdjective.objects.get(id=obj[0].id).get_antonyms()
-    obj_hyponyms = InfoAdjective.objects.get(id=obj[0].id).get_hyponyms()
-    obj_hyperonyms = InfoAdjective.objects.get(id=obj[0].id).get_hyperonyms()
+def editNoun(request, id):
+    obj = InfoNoun.objects.filter(id=id)
+    obj_synonyms = InfoNoun.objects.get(id=obj[0].id).get_synonyms()
+    obj_antonyms = InfoNoun.objects.get(id=obj[0].id).get_antonyms()
+    obj_hyponyms = InfoNoun.objects.get(id=obj[0].id).get_hyponyms()
+    obj_hyperonyms = InfoNoun.objects.get(id=obj[0].id).get_hyperonyms()
     obj = list(obj.values())
 
     synonyms = list(Synonym.objects.all().order_by("-id").values())
@@ -110,10 +107,9 @@ def editAdjective(request, id):
     hyponyms = list(Hyponym.objects.all().order_by("-id").values())
     hyperonyms = list(Hyperonym.objects.all().order_by("-id").values())
 
-    adjectives_types_two = list(map(list, InfoAdjective.ADJECTIVES_TYPES_TWO))
-    adjective_types = list(map(list, InfoAdjective.ADJECTIVE_TYPES))
-    adjective_levels = list(map(list, InfoAdjective.ADJECTIVE_LEVELS))
-    adjective_type_structure = list(map(list, InfoAdjective.ADJECTIVE_TYPE_STRUCTURE))
+    noun_types = list(map(list, InfoNoun.NOUN_TYPES))
+    noun_types_structure = list(map(list, InfoNoun.NOUN_TYPES_STRUCTURE))
+    noun_making = list(map(list, InfoNoun.NOUN_MAKING))
     return JsonResponse({
         "obj": obj,
         "synonyms": synonyms,
@@ -124,10 +120,9 @@ def editAdjective(request, id):
         "obj_antonyms": obj_antonyms,
         "obj_hyponyms": obj_hyponyms,
         "obj_hyperonyms": obj_hyperonyms,
-        "adjectives_types_two": adjectives_types_two,
-        "adjective_types": adjective_types,
-        "adjective_levels": adjective_levels,
-        "adjective_type_structure": adjective_type_structure,
+        "noun_types": noun_types,
+        "noun_types_structure": noun_types_structure,
+        "noun_making": noun_making,
     })
 
 

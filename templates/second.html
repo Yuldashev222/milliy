@@ -12,9 +12,8 @@
     <link rel="stylesheet" href="{% static 'main.css' %}">
     <title>Document</title>
     <style>
-
         body {
-            background-image: url("{% static 'b2.jpg' %}");
+            background-image: url("{% static 'b1.jpg' %}");
             background-repeat: no-repeat;
             background-size: cover;
             background
@@ -26,7 +25,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: #1b1b1bad;
+            background-color: #1b1b1bd1;
             z-index: -1;
         }
         .links-div {
@@ -177,27 +176,19 @@
             .responsive-btn {
                 padding: 3px;
             }
-            .btn-add {
-                position: absolute;
-                right: 25px;
-                top: -60px;
-                padding: 20px 10px;
-                line-height: 0;
-                font-size: 35px;
-            }
         }
     </style>
 </head>
 <body>
 <section>
     <div class="links-div">
-        <a class="links" href="#">Sifatlar</a>
-        <a class="links" href="{% url 'nouns' %}">Otlar</a>
+        <a class="links" href="{% url 'home' %}">Sifatlar</a>
+        <a class="links" href="#">Otlar</a>
     </div>
     <input oninput="search()" class="search" type="text" placeholder="so'zni qidirish">
     <!--for demo wrap-->
     <div class="header">
-        <h1>Sifatlar</h1>
+        <h1>Otlar</h1>
     </div>
     <div class="tbl-header">
         <span class="my-btn btn-add" data-toggle="modal" data-target="#scrollmodal">+</span>
@@ -205,10 +196,9 @@
             <thead>
             <tr>
                 <th>So'z</th>
-                <th>Belgi ifodalashiga ko‘ra turi</th>
-                <th>Ma‘nosiga ko‘ra turi</th>
-                <th>sifat darajasi</th>
-                <th>tuzilish jihatdan turi</th>
+                <th>Ot turi</th>
+                <th>Tuzilishiga ko'ra turi</th>
+                <th>Ot yasalishiga ko'ra turi</th>
                 <th>Sinonimlar</th>
                 <th>Antonimlar</th>
                 <th>Giponimlar</th>
@@ -222,52 +212,51 @@
     <div class="tbl-content">
         <table cellpadding="0" cellspacing="0" border="0">
             <tbody id="tbody">
-            {% for adjective in adjectives %}
+            {% for noun in nouns %}
                 <tr>
-                    <td>{{ adjective.word }}</td>
-                    <td>{{ adjective.get_adjectives_two_display }}</td>
-                    <td>{{ adjective.get_adjective_type_display }}</td>
-                    <td>{{ adjective.get_adjective_level_display }}</td>
-                    <td>{{ adjective.get_adjective_type_structure_display }}</td>
-                    {% if adjective.synonym.all %}
+                    <td>{{ noun.word }}</td>
+                    <td>{{ noun.get_noun_types_display }}</td>
+                    <td>{{ noun.get_noun_types_structure_display }}</td>
+                    <td>{{ noun.get_noun_making_display }}</td>
+                    {% if noun.synonym.all %}
                         <td>
-                            {% for synonym in adjective.synonym.all %}
+                            {% for synonym in noun.synonym.all %}
                                 <p>{{ synonym.word }},</p>
                             {% endfor %}
                         </td>
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    {% if adjective.antonym.all %}
+                    {% if noun.antonym.all %}
                         <td>
-                            {% for antonym in adjective.antonym.all %}
+                            {% for antonym in noun.antonym.all %}
                                 <p>{{ antonym.word }},</p>
                             {% endfor %}
                         </td>
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    {% if adjective.hyponym.all %}
+                    {% if noun.hyponym.all %}
                         <td>
-                            {% for hyponym in adjective.hyponym.all %}
+                            {% for hyponym in noun.hyponym.all %}
                                 <p>{{ hyponym.word }},</p>
                             {% endfor %}
                         </td>
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    {% if adjective.hyperonym.all %}
+                    {% if noun.hyperonym.all %}
                         <td>
-                            {% for hyperonym in adjective.hyperonym.all %}
+                            {% for hyperonym in noun.hyperonym.all %}
                                 <p>{{ hyperonym.word }},</p>
                             {% endfor %}
                         </td>
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    <td>{{ adjective.review }}</td>
+                    <td>{{ noun.review }}</td>
                     <td>
-                        <a onclick="edit({{ adjective.id }})" data-toggle="modal" data-target="#staticModal"
+                        <a onclick="edit({{ noun.id }})" data-toggle="modal" data-target="#staticModal"
                            class="my-btn responsive-btn" href="#" style="display: inline-block">
                             <button class="btn-edit">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 576 512">
@@ -276,7 +265,7 @@
                                 </svg>
                             </button>
                         </a>
-                        <a class="my-btn responsive-btn" href="{% url 'delete-adjective' adjective.id %}"
+                        <a class="my-btn responsive-btn" href="{% url 'delete-noun' noun.id %}"
                            style="display: inline-block; margin-left: 10px">
                             <button class="btn-delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="#fff"
@@ -308,26 +297,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="add_form" action="{% url 'add-adjective' %}" method="post">{% csrf_token %}
+                <form class="add_form" action="{% url 'add-noun' %}" method="post">{% csrf_token %}
                     <div>
                         <span class="title">So'z: </span>
                         <p><input type="text" name="word"></p>
                     </div>
                     <div>
-                        <span class="title">Belgi ifodalashiga ko‘ra turi: </span>
-                        <p>{{ form.adjectives_two }}</p>
+                        <span class="title">Ot turi: </span>
+                        <p>{{ form.noun_types }}</p>
                     </div>
                     <div>
-                        <span class="title">Sifat turi: </span>
-                        <p>{{ form.adjective_type }}</p>
+                        <span class="title">Tuzilishiga ko'ra turi: </span>
+                        <p>{{ form.noun_types_structure }}</p>
                     </div>
                     <div>
-                        <span class="title">Sifat darajasi: </span>
-                        <p>{{ form.adjective_level }}</p>
-                    </div>
-                    <div>
-                        <span class="title">Tuzilish jihatdan turi: </span>
-                        <p>{{ form.adjective_type_structure }}</p>
+                        <span class="title">Ot yasalishiga ko'ra turi: </span>
+                        <p>{{ form.noun_making }}</p>
                     </div>
                     <div class="objs" style="display: flex;">
                         <div>
@@ -441,7 +426,7 @@
         const word = document.querySelector(".search").value;
 
         $.ajax({
-            url: '{% url "home" %}',
+            url: '{% url "nouns" %}',
             type: "GET",
             data: {
                 "word": word
@@ -449,18 +434,17 @@
             success: function (data) {
                 const content = document.getElementById("tbody");
                 content.innerHTML = "";
-                (data.adjectives).forEach(adjective => {
+                (data.nouns).forEach(noun => {
                     var html = `
                         <tr>
-                            <td>${adjective.word}</td>
-                            <td>${adjective.adjectives_two}</td>
-                            <td>${adjective.adjective_type}</td>
-                            <td>${adjective.adjective_level}</td>
-                            <td>${adjective.adjective_type_structure}</td>`;
+                            <td>${noun.word}</td>
+                            <td>${noun.noun_types}</td>
+                            <td>${noun.noun_types_structure}</td>
+                            <td>${noun.noun_making}</td>`
 
-                    if (adjective.synonyms.length) {
+                    if (noun.synonyms.length) {
                         html += `<td>`;
-                        (adjective.synonyms).forEach(synonym => {
+                        (noun.synonyms).forEach(synonym => {
                             html += `<p>${synonym}</p>`;
                         });
                         html += `</td>`;
@@ -468,9 +452,9 @@
                         html += `<td>-</td>`;
                     }
 
-                    if (adjective.antonyms.length) {
+                    if (noun.antonyms.length) {
                         html += `<td>`;
-                        (adjective.antonyms).forEach(antonyms => {
+                        (noun.antonyms).forEach(antonyms => {
                             html += `<p>${antonyms}</p>`;
                         });
                         html += `</td>`;
@@ -478,9 +462,9 @@
                         html += `<td>-</td>`;
                     }
 
-                    if (adjective.hyponyms.length) {
+                    if (noun.hyponyms.length) {
                         html += `<td>`;
-                        (adjective.hyponyms).forEach(hyponyms => {
+                        (noun.hyponyms).forEach(hyponyms => {
                             html += `<p>${hyponyms}</p>`;
                         });
                         html += `</td>`;
@@ -488,9 +472,9 @@
                         html += `<td>-</td>`;
                     }
 
-                    if (adjective.hyperonyms.length) {
+                    if (noun.hyperonyms.length) {
                         html += `<td>`;
-                        (adjective.hyperonyms).forEach(hyperonyms => {
+                        (noun.hyperonyms).forEach(hyperonyms => {
                             html += `<p>${hyperonyms}</p>`;
                         });
                         html += `</td>`;
@@ -500,9 +484,9 @@
 
 
                     html += `
-                        <td>${adjective.review}</td>
+                        <td>${noun.review}</td>
                         <td>
-                            <a onclick="edit(${adjective.id})" data-toggle="modal" data-target="#staticModal" class="my-btn responsive-btn" href="#" style="display: inline-block">
+                            <a onclick="edit(${noun.id})" data-toggle="modal" data-target="#staticModal" class="my-btn responsive-btn" href="#" style="display: inline-block">
                                 <button class="btn-edit">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 576 512">
                                         <!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) -->
@@ -510,7 +494,7 @@
                                     </svg>
                                 </button>
                             </a>
-                            <a class="my-btn responsive-btn" href="delete-adjective/${adjective.id}/" style="display: inline-block; margin-left: 10px">
+                            <a class="my-btn responsive-btn" href="delete-noun/${noun.id}/" style="display: inline-block; margin-left: 10px">
                                 <button class="btn-delete">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="#fff"
                                          class="bi bi-trash" viewBox="0 0 16 16">
@@ -531,7 +515,7 @@
     function edit(id) {
 
         $.ajax({
-            url: "edit-adjective/" + id + "/",
+            url: "edit-noun/" + id + "/",
             type: "GET",
             data: {
                 "id": id
@@ -545,9 +529,9 @@
                 var html = `<form id="editForm" method="post">{% csrf_token %}
                 <input id="obj-id" type="hidden" name="id" value="${obj.id}">
                 <div class="edit-objs"><p>So'z: </p><input type="text" name="word" value="${obj.word}"></div>`;
-                var wr = "<div class='edit-objs'><p>Belgi ifodalashiga ko‘ra turi:</p><select name='adjectives_two'>";
-                (data.adjectives_types_two).forEach(word => {
-                    if (word[0] == obj.adjectives_two) {
+                var wr = "<div class='edit-objs'><p>Ot turi:</p><select name='noun_types'>";
+                (data.noun_types).forEach(word => {
+                    if (word[0] == obj.noun_types) {
                         wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
                     } else {
                         wr += `<option value="${word[0]}">${word[1]}</option>`;
@@ -556,9 +540,9 @@
                 wr += "</select></div>";
                 html += wr;
 
-                wr = "<div class='edit-objs'><p>Sifat turi:</p><select name='adjective_type'>";
-                (data.adjective_types).forEach(word => {
-                    if (word[0] == obj.adjective_type) {
+                wr = "<div class='edit-objs'><p>Tuzilishiga ko'ra turi:</p><select name='noun_types_structure'>";
+                (data.noun_types_structure).forEach(word => {
+                    if (word[0] == obj.noun_types_structure) {
                         wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
                     } else {
                         wr += `<option value="${word[0]}">${word[1]}</option>`;
@@ -567,20 +551,9 @@
                 wr += "</select></div>";
                 html += wr;
 
-                wr = "<div class='edit-objs'><p>Sifat darajasi:</p><select name='adjective_level'>";
-                (data.adjective_levels).forEach(word => {
-                    if (word[0] == obj.adjective_level) {
-                        wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
-                    } else {
-                        wr += `<option value="${word[0]}">${word[1]}</option>`;
-                    }
-                });
-                wr += "</select></div>";
-                html += wr;
-
-                wr = "<div class='edit-objs'><p>Tuzilish jihatdan turi:</p><select name='adjective_type_structure'>";
-                (data.adjective_type_structure).forEach(word => {
-                    if (word[0] == obj.adjective_type_structure) {
+                wr = "<div class='edit-objs'><p>Ot yasalishiga ko'ra turi:</p><select name='noun_making'>";
+                (data.noun_making).forEach(word => {
+                    if (word[0] == obj.noun_making) {
                         wr += `<option value="${word[0]}" selected>${word[1]}</option>`;
                     } else {
                         wr += `<option value="${word[0]}">${word[1]}</option>`;
@@ -757,7 +730,7 @@
                 singleAddHyponymBtn.addEventListener("click", function () {
                     $.ajax({
                         url: "{% url 'add-objs' %}",
-                        data: {"word": singleNewHyponymInput.value, "check": "Hyperonym"},
+                        data: {"word": singleNewHyponymInput.value, "check": "Hyponym"},
                         type: "GET",
                         success: function (data) {
                             singleNewHyponymInput.classList.remove("border-color");
