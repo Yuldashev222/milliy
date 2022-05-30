@@ -13,4 +13,4 @@ tzdata==2022.1
 unicorn==1.0.3
 virtualenv==20.14.1
 virtualenv-clone==0.5.7
-whitenoise==6.1.0
+whitenoise==3.3.0
