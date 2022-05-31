@@ -1,5 +1,3 @@
-__pycache__/
+pychache/
 *.pyc
 db.sqlite3
-
-env

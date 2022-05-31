@@ -17,12 +17,21 @@ def home(request):
     infoNoun = InfoNoun.objects.all().order_by("-created_date")
     if request.GET:
         word = request.GET["word"]
-        infoNoun = list(InfoNoun.objects.filter(Q(word__icontains=word)).order_by("-created_date").values())
+        infoNoun = list(InfoNoun.objects.filter(
+            Q(word__icontains=word) |
+            Q(noun_types__icontains=word) |
+            Q(noun_types_structure__icontains=word) |
+            Q(noun_making__icontains=word)
+        ).order_by("-created_date").values())
         for noun in infoNoun:
             noun["synonyms"] = InfoNoun.objects.get(id=noun["id"]).get_synonyms()
             noun["antonyms"] = InfoNoun.objects.get(id=noun["id"]).get_antonyms()
             noun["hyponyms"] = InfoNoun.objects.get(id=noun["id"]).get_hyponyms()
             noun["hyperonyms"] = InfoNoun.objects.get(id=noun["id"]).get_hyperonyms()
+
+            noun["noun_types"] = InfoNoun.objects.get(id=noun["id"]).get_noun_types_display()
+            noun["noun_types_structure"] = InfoNoun.objects.get(id=noun["id"]).get_noun_types_structure_display()
+            noun["noun_making"] = InfoNoun.objects.get(id=noun["id"]).get_noun_making_display()
 
         return JsonResponse({"nouns": infoNoun})
 

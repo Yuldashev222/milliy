@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{% static 'main.css' %}">
-    <title>Document</title>
+    <title>Otlar</title>
     <style>
         body {
             background-image: url("{% static 'b1.jpg' %}");
@@ -195,6 +195,7 @@
         <table cellpadding="0" cellspacing="0" border="0">
             <thead>
             <tr>
+                <th>No</th>
                 <th>So'z</th>
                 <th>Ot turi</th>
                 <th>Tuzilishiga ko'ra turi</th>
@@ -214,6 +215,7 @@
             <tbody id="tbody">
             {% for noun in nouns %}
                 <tr>
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ noun.word }}</td>
                     <td>{{ noun.get_noun_types_display }}</td>
                     <td>{{ noun.get_noun_types_structure_display }}</td>
@@ -434,9 +436,11 @@
             success: function (data) {
                 const content = document.getElementById("tbody");
                 content.innerHTML = "";
+                var index = 1;
                 (data.nouns).forEach(noun => {
                     var html = `
                         <tr>
+                            <td>${index}</td>
                             <td>${noun.word}</td>
                             <td>${noun.noun_types}</td>
                             <td>${noun.noun_types_structure}</td>
@@ -507,6 +511,7 @@
                         </td>
                         </tr>`;
                     content.innerHTML += html;
+                    index ++;
                 });
             }
         });

@@ -8,6 +8,10 @@ from .models import *
 from .forms import AdjectiveForm, NounForm
 
 
+def index(request):
+    return render(request, "home.html")
+
+
 def home(request):
     form = AdjectiveForm()
     synonyms = Synonym.objects.all()
@@ -17,12 +21,23 @@ def home(request):
     infoAdjective = InfoAdjective.objects.all().order_by("-created_date")
     if request.GET:
         word = request.GET["word"]
-        infoAdjective = list(InfoAdjective.objects.filter(Q(word__icontains=word)).order_by("-created_date").values())
+        infoAdjective = list(InfoAdjective.objects.filter(
+            Q(word__icontains=word) |
+            Q(adjectives_two__icontains=word) |
+            Q(adjective_type__icontains=word) |
+            Q(adjective_level__icontains=word) |
+            Q(adjective_type_structure__icontains=word)
+        ).order_by("-created_date").values())
         for adjective in infoAdjective:
             adjective["synonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_synonyms()
             adjective["antonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_antonyms()
             adjective["hyponyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_hyponyms()
             adjective["hyperonyms"] = InfoAdjective.objects.get(id=adjective["id"]).get_hyperonyms()
+
+            adjective["adjectives_two"] = InfoAdjective.objects.get(id=adjective["id"]).get_adjectives_two_display()
+            adjective["adjective_type"] = InfoAdjective.objects.get(id=adjective["id"]).get_adjective_type_display()
+            adjective["adjective_level"] = InfoAdjective.objects.get(id=adjective["id"]).get_adjective_level_display()
+            adjective["adjective_type_structure"] = InfoAdjective.objects.get(id=adjective["id"]).get_adjective_type_structure_display()
 
         return JsonResponse({"adjectives": infoAdjective})
 

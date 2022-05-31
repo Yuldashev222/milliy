@@ -1,0 +1,60 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <style>
+        body {
+            background-image: url("{% static 'home-bn.png' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        html::before {
+            content: "";
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: block;
+            left: 0;
+            bottom: 0;
+            background-color: #000000a8;
+            z-index: -1;
+        }
+        .link {
+            text-decoration: none;
+            color: #fff;
+            padding: 20px 70px;
+            background-color: #5f5b55d9 ;
+            font-size: 50px;
+            line-height: 0;
+            border-radius: 30px;
+
+            transition: .1s linear;
+        }
+        .link:nth-child(2) {
+            margin-left: 100px;
+        }
+        .link:hover {
+            opacity: .8;
+            color: #ffffff7d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'home' %}" class="link">Sifatlar</a>
+        <a href="{% url 'nouns' %}" class="link">Otlar</a>
+    </div>
+</body>
+</html>

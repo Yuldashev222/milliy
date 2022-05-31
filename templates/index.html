@@ -10,14 +10,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{% static 'main.css' %}">
-    <title>Document</title>
+    <title>Sifatlar</title>
     <style>
 
         body {
             background-image: url("{% static 'b2.jpg' %}");
             background-repeat: no-repeat;
             background-size: cover;
-            background
         }
         body::before {
             content: "";
@@ -204,6 +203,7 @@
         <table cellpadding="0" cellspacing="0" border="0">
             <thead>
             <tr>
+                <th>No</th>
                 <th>So'z</th>
                 <th>Belgi ifodalashiga ko‘ra turi</th>
                 <th>Ma‘nosiga ko‘ra turi</th>
@@ -224,6 +224,7 @@
             <tbody id="tbody">
             {% for adjective in adjectives %}
                 <tr>
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ adjective.word }}</td>
                     <td>{{ adjective.get_adjectives_two_display }}</td>
                     <td>{{ adjective.get_adjective_type_display }}</td>
@@ -449,9 +450,11 @@
             success: function (data) {
                 const content = document.getElementById("tbody");
                 content.innerHTML = "";
+                var index = 1;
                 (data.adjectives).forEach(adjective => {
                     var html = `
                         <tr>
+                            <td>${index}</td>
                             <td>${adjective.word}</td>
                             <td>${adjective.adjectives_two}</td>
                             <td>${adjective.adjective_type}</td>
@@ -523,6 +526,7 @@
                         </td>
                         </tr>`;
                     content.innerHTML += html;
+                    index ++;
                 });
             }
         });
