@@ -17,6 +17,12 @@ def home(request):
     infoNoun = InfoNoun.objects.all().order_by("-created_date")
     if request.GET:
         word = request.GET["word"]
+        if word == InfoNoun.NOUN_TYPES[0][0]:
+            word = InfoNoun.NOUN_TYPES[0][1]
+        if word == InfoNoun.NOUN_TYPES_STRUCTURE[0][0]:
+            word = InfoNoun.NOUN_TYPES_STRUCTURE[0][1]
+        if word == InfoNoun.NOUN_MAKING[0][0]:
+            word = InfoNoun.NOUN_MAKING[0][1]
         infoNoun = list(InfoNoun.objects.filter(
             Q(word__icontains=word) |
             Q(noun_types__icontains=word) |

@@ -13,10 +13,10 @@
     <title>Otlar</title>
     <style>
         body {
+            overflow: hidden;
             background-image: url("{% static 'b1.jpg' %}");
             background-repeat: no-repeat;
             background-size: cover;
-            background
         }
         body::before {
             content: "";
@@ -182,8 +182,7 @@
 <body>
 <section>
     <div class="links-div">
-        <a class="links" href="{% url 'home' %}">Sifatlar</a>
-        <a class="links" href="#">Otlar</a>
+        <a class="links" href="{% url 'index' %}">Home</a>
     </div>
     <input oninput="search()" class="search" type="text" placeholder="so'zni qidirish">
     <!--for demo wrap-->

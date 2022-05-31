@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import InfoAdjective, InfoNoun
+from .models import InfoAdjective
 
 
 class AdjectiveForm(forms.ModelForm):
@@ -8,8 +8,3 @@ class AdjectiveForm(forms.ModelForm):
         model = InfoAdjective
         fields = "__all__"
 
-
-class NounForm(forms.ModelForm):
-    class Meta:
-        model = InfoNoun
-        fields = "__all__"

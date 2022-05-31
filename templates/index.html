@@ -14,6 +14,7 @@
     <style>
 
         body {
+            overflow: hidden;
             background-image: url("{% static 'b2.jpg' %}");
             background-repeat: no-repeat;
             background-size: cover;
@@ -190,8 +191,7 @@
 <body>
 <section>
     <div class="links-div">
-        <a class="links" href="#">Sifatlar</a>
-        <a class="links" href="{% url 'nouns' %}">Otlar</a>
+        <a class="links" href="{% url 'index' %}">Home</a>
     </div>
     <input oninput="search()" class="search" type="text" placeholder="so'zni qidirish">
     <!--for demo wrap-->
@@ -211,8 +211,6 @@
                 <th>tuzilish jihatdan turi</th>
                 <th>Sinonimlar</th>
                 <th>Antonimlar</th>
-                <th>Giponimlar</th>
-                <th>Giperonimlar</th>
                 <th>izoh</th>
                 <th>O'zgartirish</th>
             </tr>
@@ -243,24 +241,6 @@
                         <td>
                             {% for antonym in adjective.antonym.all %}
                                 <p>{{ antonym.word }},</p>
-                            {% endfor %}
-                        </td>
-                    {% else %}
-                        <td>-</td>
-                    {% endif %}
-                    {% if adjective.hyponym.all %}
-                        <td>
-                            {% for hyponym in adjective.hyponym.all %}
-                                <p>{{ hyponym.word }},</p>
-                            {% endfor %}
-                        </td>
-                    {% else %}
-                        <td>-</td>
-                    {% endif %}
-                    {% if adjective.hyperonym.all %}
-                        <td>
-                            {% for hyperonym in adjective.hyperonym.all %}
-                                <p>{{ hyperonym.word }},</p>
                             {% endfor %}
                         </td>
                     {% else %}
@@ -367,42 +347,6 @@
                                 <button class="new-btn" type="button" id="addAntonymBtn">qo'shish</button>
                             </p>
                         </div>
-                        <div>
-                            <p class="title">Giponimlari: </p>
-                            <ul class="manytomany" id="hyponymList">
-                                {% for word in hyponyms %}
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="hyponym" value="{{ word.id }}">
-                                            {{ word }}
-                                        </label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <button class="new-btn" type="button" id="newHyponymBtn">yangi qo'shish</button>
-                            <p class="addForm" id="addHyponymForm">
-                                <input class="objs-input" type="text" name="new_hyponym" id="newHyponymInput">
-                                <button class="new-btn" type="button" id="addHyponymBtn">qo'shish</button>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="title">Giperonimlari: </p>
-                            <ul class="manytomany" id="hyperonymList">
-                                {% for word in hyperonyms %}
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" name="hyperonym" value="{{ word.id }}">
-                                            {{ word }}
-                                        </label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <button class="new-btn" type="button" id="newHyperonymBtn">yangi qo'shish</button>
-                            <p class="addForm" id="addHyperonymForm">
-                                <input class="objs-input" type="text" name="new_hyperonym" id="newHyperonymInput">
-                                <button class="new-btn" type="button" id="addHyperonymBtn">qo'shish</button>
-                            </p>
-                        </div>
                     </div>
                     <p class="title">Izoh:</p>
                     <textarea name="review"></textarea>
@@ -480,27 +424,6 @@
                     } else {
                         html += `<td>-</td>`;
                     }
-
-                    if (adjective.hyponyms.length) {
-                        html += `<td>`;
-                        (adjective.hyponyms).forEach(hyponyms => {
-                            html += `<p>${hyponyms}</p>`;
-                        });
-                        html += `</td>`;
-                    } else {
-                        html += `<td>-</td>`;
-                    }
-
-                    if (adjective.hyperonyms.length) {
-                        html += `<td>`;
-                        (adjective.hyperonyms).forEach(hyperonyms => {
-                            html += `<p>${hyperonyms}</p>`;
-                        });
-                        html += `</td>`;
-                    } else {
-                        html += `<td>-</td>`;
-                    }
-
 
                     html += `
                         <td>${adjective.review}</td>
@@ -664,78 +587,8 @@
                         </p>
                     </div>`;
 
-                // Giponims
-                html += `<div><p class="title">Giponimlari: </p>`;
 
-                wr = '<ul class="manytomany hyponymList">';
-                (data.hyponyms).forEach(obj => {
-                    if (data.obj_hyponyms.includes(obj.word)) {
-                        wr += `
-                            <li>
-                                <label>
-                                    <input type="checkbox" checked name="hyponym" value="${obj.id}">
-                                    ${obj.word}
-                                </label>
-                            </li>`
-                    } else {
-                        wr += `
-                            <li>
-                                <label>
-                                    <input type="checkbox" name="hyponym" value="${obj.id}">
-                                    ${obj.word}
-                                </label>
-                            </li>`
-                    }
-                });
-
-                wr += "</ul>";
-
-                html += wr;
-
-                html += `
-                        <button class="new-btn newHyponymBtn" type="button">yangi qo'shish</button>
-                        <p class="addForm addHyponymForm">
-                            <input class="objs-input newHyponymInput" type="text" name="new_hyponym">
-                            <button class="new-btn addHyponymBtn" type="button">qo'shish</button>
-                        </p>
-                    </div>`;
-
-
-                // Giperonyms
-                html += `<div><p class="title">Giperonimlari: </p>`;
-
-                wr = '<ul class="manytomany hyperonymList">';
-                (data.hyperonyms).forEach(obj => {
-                    if (data.obj_hyperonyms.includes(obj.word)) {
-                        wr += `
-                            <li>
-                                <label>
-                                    <input type="checkbox" checked name="hyperonym" value="${obj.id}">
-                                    ${obj.word}
-                                </label>
-                            </li>`
-                    } else {
-                        wr += `
-                            <li>
-                                <label>
-                                    <input type="checkbox" name="hyperonym" value="${obj.id}">
-                                    ${obj.word}
-                                </label>
-                            </li>`
-                    }
-                });
-
-                wr += "</ul>";
-
-                html += wr;
-
-                html += `
-                        <button class="new-btn newHyperonymBtn" type="button">yangi qo'shish</button>
-                        <p class="addForm addHyperonymForm">
-                            <input class="objs-input newHyperonymInput" type="text" name="new_hyperonym">
-                            <button class="new-btn addHyperonymBtn" type="button">qo'shish</button>
-                        </p>
-                    </div></div>`;
+                html += `</div>`;
 
 
                 html += `
@@ -747,102 +600,6 @@
                     </form>`;
 
                 content.innerHTML += html;
-
-                const singleNewHyponymBtn = document.querySelector(".newHyponymBtn");
-                const singleNewHyponymInput = document.querySelector(".newHyponymInput");
-                const singleAddHyponymForm = document.querySelector(".addHyponymForm");
-                const singleAddHyponymBtn = document.querySelector(".addHyponymBtn");
-                const obj_hyponyms = data.obj_hyponyms;
-
-                singleNewHyponymBtn.addEventListener("click", function () {
-                    singleAddHyponymForm.classList.toggle("block-none");
-                });
-
-                singleAddHyponymBtn.addEventListener("click", function () {
-                    $.ajax({
-                        url: "{% url 'add-objs' %}",
-                        data: {"word": singleNewHyponymInput.value, "check": "Hyperonym"},
-                        type: "GET",
-                        success: function (data) {
-                            singleNewHyponymInput.classList.remove("border-color");
-                            const hyponymList = document.querySelector(".hyponymList");
-                            hyponymList.innerHTML = "";
-                            singleNewHyponymInput.value = "";
-
-                            (data.objs).forEach(hyponym => {
-                                if (obj_hyponyms.includes(hyponym.word)) {
-                                    hyponymList.innerHTML += `
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" checked name="hyponym" value="${hyponym.id}">
-                                                ${hyponym.word}
-                                            </label>
-                                        </li>`
-                                } else {
-                                    hyponymList.innerHTML += `
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" name="hyponym" value="${hyponym.id}">
-                                                ${hyponym.word}
-                                            </label>
-                                        </li>`
-                                }
-                            });
-                        },
-                        error: function (data) {
-                            singleNewHyponymInput.classList.add("border-color");
-                        }
-                    });
-                });
-
-
-                const singleNewHyperonymBtn = document.querySelector(".newHyperonymBtn");
-                const singleNewHyperonymInput = document.querySelector(".newHyperonymInput");
-                const singleAddHyperonymForm = document.querySelector(".addHyperonymForm");
-                const singleAddHyperonymBtn = document.querySelector(".addHyperonymBtn");
-
-                const obj_hyperonyms = data.obj_hyperonyms;
-
-                singleNewHyperonymBtn.addEventListener("click", function () {
-                    singleAddHyperonymForm.classList.toggle("block-none");
-                });
-
-                singleAddHyperonymBtn.addEventListener("click", function () {
-                    $.ajax({
-                        url: "{% url 'add-objs' %}",
-                        data: {"word": singleNewHyperonymInput.value, "check": "Hyperonym"},
-                        type: "GET",
-                        success: function (data) {
-                            singleNewHyperonymInput.classList.remove("border-color");
-                            const hyperonymList = document.querySelector(".hyperonymList");
-                            hyperonymList.innerHTML = "";
-                            singleNewHyperonymInput.value = "";
-
-                            (data.objs).forEach(hyperonym => {
-                                if (obj_hyperonyms.includes(hyperonym.word)) {
-                                    hyperonymList.innerHTML += `
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" checked name="hyperonym" value="${hyperonym.id}">
-                                                ${hyperonym.word}
-                                            </label>
-                                        </li>`
-                                } else {
-                                    hyperonymList.innerHTML += `
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" name="hyperonym" value="${hyperonym.id}">
-                                                ${hyperonym.word}
-                                            </label>
-                                        </li>`
-                                }
-                            });
-                        },
-                        error: function (data) {
-                            singleNewHyperonymInput.classList.add("border-color");
-                        }
-                    });
-                });
 
 
                 const singleNewSynonymBtn = document.querySelector(".newSynonymBtn");
@@ -1016,80 +773,6 @@
             },
             error: function (data) {
                 $("#newAntonymInput").css("border-color", "red");
-            }
-        });
-    });
-
-
-    const newHyponymBtn = document.getElementById("newHyponymBtn");
-    const newHyponymInput = document.getElementById("newHyponymInput");
-    const addHyponymForm = document.getElementById("addHyponymForm");
-    const addHyponymBtn = document.getElementById("addHyponymBtn");
-
-    newHyponymBtn.addEventListener("click", function () {
-        addHyponymForm.classList.toggle("block-none");
-    });
-
-    addHyponymBtn.addEventListener("click", function () {
-        $.ajax({
-            url: "{% url 'add-objs' %}",
-            data: {"word": newHyponymInput.value, "check": "Hyponym"},
-            type: "GET",
-            success: function (data) {
-                $("#newHyponymInput").css("border-color", "#ccc");
-                const hyponymList = document.getElementById("hyponymList");
-                hyponymList.innerHTML = "";
-                newHyponymInput.value = "";
-
-                (data.objs).forEach(hyponym => {
-                    hyponymList.innerHTML += `
-                    <li>
-                        <label>
-                            <input type="checkbox" name="hyponym" value="${hyponym.id}">
-                            ${hyponym.word}
-                        </label>
-                    </li>`
-                });
-            },
-            error: function (data) {
-                $("#newHyponymInput").css("border-color", "red");
-            }
-        });
-    });
-
-
-    const newHyperonymBtn = document.getElementById("newHyperonymBtn");
-    const newHyperonymInput = document.getElementById("newHyperonymInput");
-    const addHyperonymForm = document.getElementById("addHyperonymForm");
-    const addHyperonymBtn = document.getElementById("addHyperonymBtn");
-
-    newHyperonymBtn.addEventListener("click", function () {
-        addHyperonymForm.classList.toggle("block-none");
-    });
-
-    addHyperonymBtn.addEventListener("click", function () {
-        $.ajax({
-            url: "{% url 'add-objs' %}",
-            data: {"word": newHyperonymInput.value, "check": "Hyperonym"},
-            type: "GET",
-            success: function (data) {
-                $("#newHyperonymInput").css("border-color", "#ccc");
-                const hyperonymList = document.getElementById("hyperonymList");
-                hyperonymList.innerHTML = "";
-                newHyperonymInput.value = "";
-
-                (data.objs).forEach(hyperonym => {
-                    hyperonymList.innerHTML += `
-                    <li>
-                        <label>
-                            <input type="checkbox" name="hyperonym" value="${hyperonym.id}">
-                            ${hyperonym.word}
-                        </label>
-                    </li>`
-                });
-            },
-            error: function (data) {
-                $("#newHyperonymInput").css("border-color", "red");
             }
         });
     });

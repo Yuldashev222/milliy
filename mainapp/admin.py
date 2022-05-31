@@ -4,5 +4,3 @@ from .models import *
 admin.site.register(InfoAdjective)
 admin.site.register(Synonym)
 admin.site.register(Antonym)
-admin.site.register(Hyponym)
-admin.site.register(Hyperonym)
