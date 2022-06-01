@@ -1,5 +1,4 @@
 import json
-import openpyxl
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect

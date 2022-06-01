@@ -36,27 +36,27 @@ class InfoAdjective(models.Model):
     )
 
     ADJECTIVE_TYPES = (
-        ("xususiyat", "Xususiyat sifatlari"),
-        ("rang_tus", "Rang – tus sifatlari"),
-        ("maza_tam", "Maza – ta’m sifatlari"),
-        ("hajm_olchov", "Hajm – o’lchov sifatlari"),
-        ("hid", "Hid sifatlari"),
-        ("makon_zamon", "Makon-zamon sifatlari"),
+        ("xususiyat", "Xususiyat bildiruvchi sifat"),
+        ("rang_tus", "Rang – tus bildiruvchi sifat"),
+        ("maza_tam", "Maza – ta’m bildiruvchi sifat"),
+        ("hajm_olchov", "Hajm – o’lchov bildiruvchi sifat"),
+        ("hid", "Hid bildiruvchi sifat"),
+        ("makon_zamon", "Makon-zamon bildiruvchi sifat"),
     )
 
     ADJECTIVE_LEVELS = (
-        ("oddiy", "Oddiy"),
-        ("orttirma", "Orttirma"),
-        ("ozaytirma", "Ozaytirma"),
-        ("qiyosiy", "Qiyosiy"),
+        ("oddiy", "Oddiy daraja"),
+        ("orttirma", "Orttirma daraja"),
+        ("ozaytirma", "Ozaytirma daraja"),
+        ("qiyosiy", "Qiyosiy daraja"),
     )
 
     ADJECTIVE_TYPE_STRUCTURE = (
         ("sodda_tub", "Sodda tub"),
         ("sodda_yasama", "Sodda yasama"),
-        ("qoshma", "Qo'shma"),
-        ("juft", "Juft"),
-        ("takroriy", "Takroriy"),
+        ("qoshma", "Qo'shma sifat"),
+        ("juft", "Juft sifat"),
+        ("takroriy", "Takroriy sifat"),
     )
 
     word = models.CharField(verbose_name="So'z", max_length=100, unique=True)
