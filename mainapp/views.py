@@ -1,10 +1,11 @@
 import json
+import openpyxl
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from .models import *
-from .forms import AdjectiveForm
+from .forms import AdjectiveForm, FileForm
 
 
 def index(request):
@@ -77,6 +78,35 @@ def home(request):
 
 
 def addAdjective(request):
+    if request.FILES:
+        file_form = FileForm(request.POST, request.FILES)
+        if file_form.is_valid():
+            file = file_form.save(commit=False)
+            name = file.file
+            file.save()
+            sheet = openpyxl.open(f"media/{name}").active
+            word = sheet["A1"].value.strip()
+            adjectives_two = sheet["B1"].value
+            adjective_type = sheet["C1"].value
+            adjective_level = sheet["D1"].value
+            adjective_type_structure = sheet["E1"].value
+            synonyms = list(map(lambda elem: elem.strip().replace(",", "").replace(".", ""), sheet["F1"].value.split()))
+            antonyms = list(map(lambda elem: elem.strip().replace(",", "").replace(".", ""), sheet["G1"].value.split()))
+            print(synonyms, antonyms, sep="\n")
+            review = sheet["H1"].value.strip()
+            new_adjective = InfoAdjective.objects.create(
+                word=word,
+                adjectives_two=InfoAdjective.ADJECTIVES_TYPES_TWO[adjectives_two - 1][0],
+                adjective_type=InfoAdjective.ADJECTIVE_TYPES[adjective_type - 1][0],
+                adjective_level=InfoAdjective.ADJECTIVE_LEVELS[adjective_level - 1][0],
+                adjective_type_structure=InfoAdjective.ADJECTIVE_TYPE_STRUCTURE[adjective_type_structure - 1][0],
+                # synonym=synonym,
+                # antonym=antonym,
+                review=review
+            )
+            new_adjective.save()
+            return redirect("home")
+
     form = AdjectiveForm(request.POST)
     if form.is_valid():
         obj = form.save(commit=False)

@@ -1,6 +1,10 @@
 from django.db import models
 
 
+class File(models.Model):
+    file = models.FileField(upload_to="Files/")
+
+
 class Synonym(models.Model):
     word = models.CharField(verbose_name="so'z", max_length=100, unique=True)
 

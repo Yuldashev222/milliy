@@ -246,7 +246,7 @@
                     {% else %}
                         <td>-</td>
                     {% endif %}
-                    <td>{{ adjective.review }}</td>
+                    <td style="word-break: break-word">{{ adjective.review }}</td>
                     <td>
                         <a onclick="edit({{ adjective.id }})" data-toggle="modal" data-target="#staticModal"
                            class="my-btn responsive-btn" href="#" style="display: inline-block">
@@ -289,7 +289,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="add_form" action="{% url 'add-adjective' %}" method="post">{% csrf_token %}
+                <form class="add_form" action="{% url 'add-adjective' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
                     <div>
                         <span class="title">So'z: </span>
                         <p><input type="text" name="word"></p>
@@ -350,6 +350,7 @@
                     </div>
                     <p class="title">Izoh:</p>
                     <textarea name="review"></textarea>
+                    <input type="file" name="file" style="margin: 10px 0 20px">
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Ortga</button>

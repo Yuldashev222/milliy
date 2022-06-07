@@ -1,0 +1,13 @@
+oxirgi maydonda vergul bolmaydi!!!
+
+indent=2,3,4,5???
+
+json.load(json_file) >> oqish
+json.dumps(json.load()) >>> otqazadi JSON ga
+json.loads(json.load()) >>> qaytaradi python ga
+json.dump(json.load(), json_file, indent=4) >>> yozadi JSON da
+json.load(json.load(), json_file, indent=4) >>> oqiydi JSON da
+
+choice, randint
+
+" ".join(list())

@@ -1,0 +1,22 @@
+konstruktor
+
+inkapsulyatsiya
+shoxrux._Odam__kozlari
+
+getter
+setter
+@property
+@age.setter
+
+vorislik
+
+polimorfizm
+
+dekarator
+
+@classmethod(cls!!!)
+
+__repr__ ==
+__eq__ ><
+__le__ <=, >=
+__getitem__ [0]
